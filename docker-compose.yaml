@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: hotelhub-backend
+    build: ./backend
+    ports:
+      - "${HTTP_PORT}:${HTTP_PORT}"
+    environment:
+      HTTP_PORT: ${HTTP_PORT}
+      MONGO_URL: ${MONGO_URL}
+      SESSION_SECRET: ${SESSION_SECRET}
+    depends_on:
+      - mongo
+
+  mongo:
+    container_name: hotelhub-mongo
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+
+  frontend:
+    container_name: hotelhub-frontend
+    build: ./frontend
+    ports:
+      - "3001:3001"
+    depends_on:
+      - app
